@@ -10,6 +10,7 @@ import { imageViewerData, imageRawData } from '../types/imageViewer'
 import { getFileContent, patchFileContent } from '../helpers/dynamicsData'
 import { genPluralName } from '../helpers/common'
 import { testImages } from '../test/imgData'
+import { ClipLoader } from 'react-spinners';
 
 export type ImageViewerWrapperProps = {
     pcfContext: ComponentFramework.Context<IInputs>
@@ -44,7 +45,11 @@ export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfConte
     useEffect(() => {
         const tempList = [] as Array<imageViewerData>
         Array.from(imageRawData).forEach((element: imageRawData) => {
-            tempList.push({ original: element.content, thumbnail: element.content, name: "" })
+            tempList.push({
+                original: element.content,
+                thumbnail: element.content,
+                name: ""
+            })
         })
 
         setImageViewerList([...tempList])
@@ -219,9 +224,12 @@ export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfConte
             <div style={{ width: "100%", height: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '350px' }}>
                 {
                     currentUIState == "loader" ?
-                        <ScaleLoader
+                        <ClipLoader
                             aria-label="Loading Spinner"
                             data-testid="loader"
+                            cssOverride={{
+                                "color": "var(--colorBrandBackground) var(--colorBrandBackground) transparent"
+                            }}
                         />
                         : null
                 }
@@ -231,7 +239,7 @@ export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfConte
                             items={imageViewerList}
                             lazyLoad={false}
                             showThumbnails={true}
-                            showFullscreenButton={false}
+                            showFullscreenButton={true}
                             showPlayButton={false}
                             showBullets={true}
                             showIndex={true}
