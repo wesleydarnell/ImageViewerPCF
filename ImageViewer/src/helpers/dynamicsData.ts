@@ -12,7 +12,7 @@ export const getFileContent = (webApiURL: string,
     setCurrentUIState: React.Dispatch<React.SetStateAction<string>>,
     setImageRawData: React.Dispatch<React.SetStateAction<imageRawData[]>>
 ) => {
-    console.log(`[ImageViewerPCF] Get raw file data from CRM field`);
+    console.log(`[ImageGalleryPCF] Get raw file data from CRM field`);
     const req = new XMLHttpRequest();
     req.open("GET", webApiURL);
     req.setRequestHeader("Content-Type", "application/octet-stream")
@@ -36,7 +36,7 @@ export const getFileContent = (webApiURL: string,
                 }
             } else {
                 const error = JSON.parse(this.response).error
-                console.log(`[ImageViewerPCF] Error on getFileContent : ${error.message}`)
+                console.log(`[ImageGalleryPCF] Error on getFileContent : ${error.message}`)
                 setCurrentUIState("viewer")
             }
         }
@@ -58,7 +58,7 @@ export const patchFileContent = (
     setCurrentUIState: React.Dispatch<React.SetStateAction<string>>
 ) => {
 
-    console.log(`[ImageViewerPCF] Updating file data to CRM field`);
+    console.log(`[ImageGalleryPCF] Updating file data to CRM field`);
 
     const req = new XMLHttpRequest()
     req.open("PATCH", webApiURL)
@@ -79,7 +79,7 @@ export const patchFileContent = (
                 }
             } else {
                 const error = JSON.parse(this.response).error
-                console.log(`[ImageViewerPCF] Error on patchFileContent : ${error.message}`)
+                console.log(`[ImageGalleryPCF] Error on patchFileContent : ${error.message}`)
                 setCurrentUIState("viewer")
             }
         }

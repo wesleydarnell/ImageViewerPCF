@@ -2,7 +2,6 @@ import * as React from 'react'
 import { IInputs } from "../../generated/ManifestTypes"
 import { useState, useEffect, useRef, DragEvent as ReactDragEvent } from 'react'
 import ImageGallery from 'react-image-gallery'
-import ScaleLoader from "react-spinners/ScaleLoader";
 import { IconButton, MessageBar, MessageBarType, } from '@fluentui/react'
 import { Dialog, DialogType, DialogFooter } from '@fluentui/react/lib/Dialog';
 import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button';
@@ -17,15 +16,16 @@ export type ImageViewerWrapperProps = {
 }
 
 export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfContext }) => {
+    const isTestHarness = window.location.href.includes("localhost");
     const dynamicProps = pcfContext.parameters.imageViewerProps.raw || ""   // for future use
     const fileFieldName = pcfContext.parameters.fileFieldName.raw || ""
 
     // @ts-expect-error necessity
     const recordId = pcfContext.page.entityId
     // @ts-expect-error necessity
-    const entityName = genPluralName(pcfContext.page.entityTypeName)
+    const entityName = genPluralName(pcfContext.page.entityTypeName ?? "")
     // @ts-expect-error necessity
-    const webApiURL = `${pcfContext.page.getClientUrl() as string}/api/data/v9.2/${entityName}(${recordId})/${fileFieldName}`
+    const webApiURL = isTestHarness ? '' : `${pcfContext.page.getClientUrl() as string}/api/data/v9.2/${entityName}(${recordId})/${fileFieldName}`
 
     const [imageViewerList, setImageViewerList] = useState([] as Array<imageViewerData>)
     const [imageRawData, setImageRawData] = useState([] as Array<imageRawData>)
@@ -38,8 +38,12 @@ export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfConte
     const hiddenFileInput = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
-        getFileContent(webApiURL, setCurrentUIState, setImageRawData);
-        //setImageViewerList([...testImages] as imageViewerData[])  //comment actual data source and uncomment this line to use test data
+        if (isTestHarness) {
+            setImageViewerList([...testImages] as imageViewerData[])  //comment actual data source and uncomment this line to use test data
+        }
+        else {
+            getFileContent(webApiURL, setCurrentUIState, setImageRawData);
+        }
     }, []);
 
     useEffect(() => {
@@ -56,7 +60,7 @@ export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfConte
     }, [imageRawData])
 
     const appendImage = (latestImageDataArray: imageRawData[]) => {
-        console.log(`[ImageViewerPCF] Append Image with data ${latestImageDataArray}`)
+        console.log(`[ImageGalleryPCF] Append Image with data ${latestImageDataArray}`)
         setCurrentUIState("loader")
         patchFileContent(webApiURL, latestImageDataArray, setCurrentUIState)
         tempImageRawData.current = []
@@ -64,7 +68,7 @@ export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfConte
     }
 
     const deleteImage = (index: number) => {
-        console.log(`[ImageViewerPCF] Delete Image at index ${index}`)
+        console.log(`[ImageGalleryPCF] Delete Image at index ${index}`)
         setCurrentUIState("loader")
         const updatedRawData = [...imageRawData]
         updatedRawData.splice(index, 1)
@@ -107,7 +111,7 @@ export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfConte
             tempImageRawData.current.push({ name: file.name, type: file.type, size: file.size, content: data as string })
 
             const totalSize = tempImageRawData.current.map((item) => item.size).reduce((accumulator, currentVal) => { return accumulator + currentVal; }, 0)
-            console.log(`[ImageViewerPCF] Total Size: ${totalSize}`)
+            console.log(`[ImageGalleryPCF] Total Size: ${totalSize}`)
             if (totalSize * 4 / 3 > 16000000) { // converting binary to base64 increases the size by 4/3
                 messageBarText.current = "Storage limit reached. The maximum total size is 12MB. Please try again with a smaller file."
                 setCurrentUIState("messageBar")
@@ -132,7 +136,7 @@ export const ImageViewerWrapper: React.FC<ImageViewerWrapperProps> = ({ pcfConte
     }
 
     const fileDownload = (index: number) => {
-        console.log(`[ImageViewerPCF] Download Image ${imageRawData[index].name}`)
+        console.log(`[ImageGalleryPCF] Download Image ${imageRawData[index].name}`)
         const downloadLink = document.createElement("a")
         downloadLink.href = imageRawData[index].content
         downloadLink.download = imageRawData[index].name

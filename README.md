@@ -1,9 +1,9 @@
-# ImageViewerPCF
+# ImageGalleryPCF
 
 ## About
 ***This solution extends MS Dynamics Platform allowing users to upload/view Image(s) elegantly.***
 
-**ImageViewerPCF** is a custom control that allows for the instant upload of images for any entity records once configured. With the introduction of the [File Data Type in Dataverse](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/file-column-data?tabs=webapi), the Dynamics platform has expanded the potential solutions that can be achieved. This control relies on the DataType field and enhances the functionality of Dynamics CRM as the OOB version has no multi image viewing capability.
+**ImageGalleryPCF** is a custom control that allows for the instant upload of images for any entity records once configured. With the introduction of the [File Data Type in Dataverse](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/file-column-data?tabs=webapi), the Dynamics platform has expanded the potential solutions that can be achieved. This control relies on the DataType field and enhances the functionality of Dynamics CRM as the OOB version has no multi image viewing capability.
 
 When image files are uploaded via File Explorer or through a drag-and-drop method, the image file binaries are converted into base64 format and then combined into a single base64 blob. This blob is uploaded into the configured file type field using Web API methods (limitations are covered later in this documentation). When viewing the control, it retrieves the file's base64 content, parses it accordingly, and renders the images.
 
@@ -27,8 +27,8 @@ https://github.com/user-attachments/assets/9e421914-639e-471e-a4b2-da436cca27f1
 
 ## Setup
 Import PCF control using one of two ways
-1. Clone this project, [build](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/create-custom-controls-using-pcf) and deploy it locally using instructions from [MS Docs](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/import-custom-controls) **OR** Import the provided [solution (Click download raw file)](Solutions/downloads/ImageViewerPCF_unmanaged.zip) directly in your Dynamics org
-2. Create a File Type field under the Entity that you want to utilize this ImageViewerPCF's functionality
+1. Clone this project, [build](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/create-custom-controls-using-pcf) and deploy it locally using instructions from [MS Docs](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/import-custom-controls) **OR** Import the provided [solution (Click download raw file)](Solutions/downloads/ImageGalleryPCF_unmanaged.zip) directly in your Dynamics org
+2. Create a File Type field under the Entity that you want to utilize this ImageGalleryPCF's functionality
 3. Create another placeholder field of type "single line of text". Its sole purpose is to host the pcf control in the Entity form
 4. For field created in step #4, set it up in the form section as desired (or in a new tab)
 ![alt text](assets/PlaceholderFieldSetup.png)
